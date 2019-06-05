@@ -5,7 +5,7 @@
   let restaurantData = "no data";
   let allRestaurantsData = "no data";
   let svgLineGraph = "";
-  let svgHistogram = "";
+  let svgBarGraph = "";
 
   // load data and make scatter plot after window loads
   window.onload = function() {
@@ -206,14 +206,14 @@
           .style("opacity", 0);
       });
 
-    svgHistogram = div.append("svg")
+    svgBarGraph = div.append("svg")
       .attr('width', 1000)
       .attr('height', 500);
   }
 
   // make histogram graph with data
   function makeBarGraph() {
-    svgHistogram.html("");
+    svgBarGraph.html("");
 
     var margin = {top: 10, right: 20, bottom: 30, left: 10},
     width = 800 - margin.left - margin.right,
@@ -243,31 +243,31 @@
     var x = d3.scaleBand()
         .domain(provinceData.map(function(d) {return d.province;}))
         .range([0, width]);
+        
+    svgBarGraph.append("text")
+      .attr('x', 250)
+      .attr('y', 500)
+      .style('font-size', '10pt')
+      .text("Provinces");
 
-    svgHistogram.append("g")
+    svgBarGraph.append("g")
         .attr("transform", "translate(40," + height + ")")
         .call(d3.axisBottom(x));
-    
-    svgHistogram.append("text")
-        .attr("x", width/2)
-        .attr("y", height + margin.bottom)
-        .text("Provinces");
 
     var y = d3.scaleLinear()
       .domain([0, d3.max(provinceData, function (d) {return d.count;})])
       .range([height, 0]);
 
-    svgHistogram.append("g")
-        .attr("transform", "translate(40,0)")
-        .call(d3.axisLeft(y));
+    svgBarGraph.append("text")
+      .attr("transform", "translate(15, 300)rotate(-90)")
+      .style('font-size', '10pt')
+      .text("Amount of Restaurants");
 
-    svgHistogram.append("text")
-    .attr("x", -300)
-    .attr("y", 10)
-    .attr("transform", "rotate(-90)")
-    .text("Amount of Restaurants");
+    svgBarGraph.append("g")
+      .attr("transform", "translate(40, 0)")
+      .call(d3.axisLeft(y));
   
-    svgHistogram.selectAll(".bar")
+    svgBarGraph.selectAll(".bar")
       .data(provinceData)
       .enter().append("rect")
       .attr("x", function (d) {
